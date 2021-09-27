@@ -14,14 +14,15 @@ let possibleWords = [
 ]
 
 let remainingTry = 7;
-let randomWord = randomPick();
-let hiddenWord = hiddenPick();
-let splittedWord = randomWord.split("");
+let randomWord = ""
+let hiddenWord = [];
+let splittedWord = "";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // Choix aléatoire d'un mot
 function randomPick() {
   let randomWord =  possibleWords[Math.floor(Math.random() * possibleWords.length)] 
+  console.log(randomWord);
   return randomWord;
 }
 
@@ -41,53 +42,59 @@ function interface () {
     
   if (command === "j") {
       alert("Très bien, commençons à jouer");
-      return hangman();
+      remainingTry = 7;
+      randomWord = randomPick();
+      hiddenWord = hiddenPick();
+      splittedWord = randomWord.split("");
+      hangman();
   } 
     else if (command === "r") {
       alert("Voici les règles du jeu: \nVous devez choisir une lettre à chaque tour. \nSi vous vous trompez 7 fois: game over! \nSi vous trouvez le mot avant cela: vous gagnez!");
-      return interface();
+      interface();
   } 
     else if (command === "q") {
       alert("Au revoir!");
   } 
     else {
       alert("Votre saisie est invalide! Veuillez recommencer");
-      return interface();
+      interface();
   }
 } 
 
 // Fonction principale
 function hangman() {
-  let letter = prompt(`${remainingTry} essais restants. \nChoisissez une lettre. \n ${hiddenWord.join(" ")}`);
-  
-  if (letter.length !== 1) {
-    alert("Votre saisie est invalide! Une vie en moins!");
-    remainingTry --; 
-    return hangman();
-  } 
-  else if (letter.length === 1 && remainingTry >= 1 && hiddenWord.indexOf("_") !== -1) {
+  while (remainingTry >= 0 ) {
+    let hasFoundLetter = false;
+ 
+    if (hiddenWord.indexOf("_") === -1) {
+      alert("Bingo! " + randomWord + " était bien le mot caché! Tu as gagné!");
+      interface();
+    }
+    else if (remainingTry < 1) {
+      alert(`Tu as epuisé tous tes essais... GAME OVER\nLe mot caché était ${randomWord}`);
+      interface();
+    }
+    let letter = prompt(`${remainingTry} essais restants. \nChoisissez une lettre. \n ${hiddenWord.join(" ")}`);
+    if (letter.length !== 1) {
+      alert("Votre saisie est invalide! Une vie en moins!");
+      remainingTry --; 
+      return hangman();
+    }  
     alert("Voyons si il y a un " + letter +" dans notre mot...")
-    
     for(let n = 0; n < splittedWord.length ; n++) {
       if (letter === splittedWord[n]) {
-        alert("Bien joué!");
-        hiddenWord.splice(n, 1, letter);
-        return hangman();
+        hiddenWord[n] = letter;
+        console.log(`boucle :${n}`);
+        hasFoundLetter = true;
       }   
-      else {
-        alert("Il n'y a pas de " + letter + " dans ce mot, désolé...");
-        remainingTry--;
-        return hangman();
-      }
+    } 
+    if (!hasFoundLetter)
+    {
+      alert("Il n'y a pas de " + letter + " dans ce mot, désolé...");
+      remainingTry--; 
+    } else {
+      alert("Bien joué ! Vous avez trouvé une lettre !");
     }
-  }
-  else if (remainingTry < 1) {
-    alert(`Tu as epuisé tous tes essais... GAME OVER\nLe mot caché était ${randomWord}`);
-    return interface();
-  }
-  else {
-    alert("Bingo! " + randomWord + " était bien le mot caché! Tu as gagné!");
-    return interface();
   }
 }
 
