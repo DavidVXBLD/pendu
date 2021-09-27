@@ -19,13 +19,11 @@ let hiddenWord = hiddenPick();
 let splittedWord = randomWord.split("");
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// Choix aléatoire d'un mot
 function randomPick() {
-  let randomWord =  possibleWords[Math.floor(Math.random() * possibleWords.length)] 
+  let randomWord =  possibleWords[Math.floor(Math.random() * possibleWords.length)]
   return randomWord;
 }
 
-// Transformation du mot en underscore
 function hiddenPick() {
   let hiddenWord = [];
   
@@ -35,7 +33,6 @@ function hiddenPick() {
   return hiddenWord;
 }
 
-// Initiation du programme: commandes et jeu
 function interface () {
   let command = prompt("Une petite partie de Pendu? \nVeuillez choisir votre destination: tapez j si voulez jouer, r si vous souhaitez consulter les règles, et q si vous désirez quitter le jeu")
     
@@ -56,41 +53,41 @@ function interface () {
   }
 } 
 
-// Fonction principale
 function hangman() {
   let letter = prompt(`${remainingTry} essais restants. \nChoisissez une lettre. \n ${hiddenWord.join(" ")}`);
   
-  if (letter.length !== 1) {
-    alert("Votre saisie est invalide! Une vie en moins!");
-    remainingTry --; 
-    return hangman();
-  } 
-  else if (letter.length === 1 && remainingTry >= 1 && hiddenWord.indexOf("_") !== -1) {
-    alert("Voyons si il y a un " + letter +" dans notre mot...")
-    
-    for(let n = 0; n < splittedWord.length ; n++) {
-      if (letter === splittedWord[n]) {
-        alert("Bien joué!");
-        hiddenWord.splice(n, 1, letter);
-        return hangman();
-      }   
-      else {
-        alert("Il n'y a pas de " + letter + " dans ce mot, désolé...");
-        remainingTry--;
-        return hangman();
-      }
-    }
-  }
-  else if (remainingTry < 1) {
+  if (remainingTry < 1) {
     alert(`Tu as epuisé tous tes essais... GAME OVER\nLe mot caché était ${randomWord}`);
     return interface();
   }
-  else {
+  else if (hiddenWord.indexOf("_") === -1) {
     alert("Bingo! " + randomWord + " était bien le mot caché! Tu as gagné!");
     return interface();
   }
+  else {
+    if (letter.length !== 1) {
+        alert("Votre saisie est invalide! Une vie en moins!");
+        remainingTry --;
+        return hangman();
+    } 
+    else if (letter.length === 1 && remainingTry >= 1 && hiddenWord.indexOf("_") !== -1) {
+        alert("Voyons si il y a un " + letter +" dans notre mot...")
+        
+        for(let n = 0; n < splittedWord.length ; n++) {
+            if (letter === splittedWord[n]) {
+                alert("Bien joué!");
+                hiddenWord.splice(n, 1, letter);
+                return hangman();
+            }   
+            else {
+                alert("Il n'y a pas de " + letter + " dans ce mot, désolé...");
+                remainingTry--;
+                return hangman();
+            }
+        }
+    }
+  }
 }
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Start Hangman ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 interface();
