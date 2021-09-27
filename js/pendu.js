@@ -22,7 +22,6 @@ let splittedWord = "";
 // Choix aléatoire d'un mot
 function randomPick() {
   let randomWord =  possibleWords[Math.floor(Math.random() * possibleWords.length)] 
-  console.log(randomWord);
   return randomWord;
 }
 
@@ -84,7 +83,6 @@ function hangman() {
     for(let n = 0; n < splittedWord.length ; n++) {
       if (letter === splittedWord[n]) {
         hiddenWord[n] = letter;
-        console.log(`boucle :${n}`);
         hasFoundLetter = true;
       }   
     } 
